@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Calcolatore Conguagli Ereditari</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --light-bg: #f8f9fa;
+            --dark-text: #333;
+            --light-text: #fff;
+            --border-color: #ddd;
+            --hover-color: #e3f2fd;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --success-color: #4caf50;
+            --error-color: #f44336;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-text);
+            background-color: var(--light-bg);
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h2 {
+            color: var(--secondary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--accent-color);
+            font-size: 1.8rem;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+            background: white;
+            box-shadow: var(--shadow);
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 0.95rem;
+        }
+        
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            transition: background-color 0.2s;
+        }
+        
+        th {
+            background: var(--primary-color);
+            color: var(--light-text);
+            font-weight: 600;
+            text-align: left;
+        }
+        
+        tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        tr:hover {
+            background-color: var(--hover-color);
+        }
+        
+        .number {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .positive {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .negative {
+            color: var(--error-color);
+            font-weight: bold;
+        }
+        
+        input {
+            width: 100%;
+            padding: 8px 12px;
+            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.2);
+        }
+        
+        button {
+            padding: 12px 25px;
+            margin-top: 15px;
+            margin-right: 10px;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .print-button {
+            background-color: var(--primary-color);
+        }
+        
+        .print-button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .button-container {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .totals {
+            font-weight: bold;
+            background-color: rgba(22, 96, 136, 0.15);
+        }
+        
+        .totals td {
+            border-top: 2px solid var(--secondary-color);
+        }
+        
+        .help-text {
+            background-color: rgba(79, 195, 247, 0.1);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+            font-size: 0.9rem;
+        }
+        
+        /* Nasconde i database */
+        #mappali-data, #quote-data {
+            display: none !important;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Calcolatore Conguagli Ereditari</h2>
+        
+        <!-- Database Mappali (nascosto) -->
+        <div id="mappali-data" style="display:none;">
+            <!-- Menghetti -->
+            <span data-id="63" data-value="1000000"></span>
+            <span data-id="716" data-value="1070000"></span>
+            <span data-id="995" data-value="850000"></span>
+            <!-- Ostini -->
+            <span data-id="419" data-value="50000"></span>
+            <span data-id="425" data-value="22000"></span>
+            <span data-id="459" data-value="1430000"></span>
+            <span data-id="721" data-value="1020000"></span>
+            <span data-id="897" data-value="640000"></span>
+            <span data-id="1104" data-value="590000"></span>
+        </div>
+
+        <!-- Quote Fisse -->
+        <div id="quote-data" style="display:none;">
+            <span data-erede="Claudio" data-menghetti="4/45" data-ostini="19/180"></span>
+            <span data-erede="Franco" data-menghetti="4/45" data-ostini="19/180"></span>
+            <span data-erede="Marco" data-menghetti="4/45" data-ostini="19/180"></span>
+            <span data-erede="Giovanna" data-menghetti="2/15" data-ostini="19/120"></span>
+            <span data-erede="Maria" data-menghetti="2/15" data-ostini="19/120"></span>
+            <span data-erede="Mirko" data-menghetti="7/15" data-ostini="11/30"></span>
+        </div>
+
+        <div class="help-text">
+            <strong>📋 Istruzioni:</strong> Inserisci i mappali assegnati a ciascun erede.<br>
+            <strong>Esempi:</strong> "63" (mappale intero), "½ 459" (metà mappale), "½ 1104,419,425" (metà di più mappali)
+        </div>
+
+        <!-- Tabella Interattiva -->
+        <table id="tabella-conguagli">
+            <thead>
+                <tr>
+                    <th>Erede</th>
+                    <th>Mappali Assegnati</th>
+                    <th>Valore Assegnato (CHF)</th>
+                    <th>Quota Totale (CHF)</th>
+                    <th>Conguaglio (CHF)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-erede="Claudio">
+                    <td><strong>Claudio</strong></td>
+                    <td><input type="text" class="mappali-input" placeholder="Es: 63"></td>
+                    <td class="number" id="valore-claudio">0.00</td>
+                    <td class="number" id="quota-claudio">655'840.28</td>
+                    <td class="number" id="conguaglio-claudio">0.00</td>
+                </tr>
+                <tr data-erede="Franco">
+                    <td><strong>Franco</strong></td>
+                    <td><input type="text" class="mappali-input" placeholder="Es: ½ 459"></td>
+                    <td class="number" id="valore-franco">0.00</td>
+                    <td class="number" id="quota-franco">655'840.28</td>
+                    <td class="number" id="conguaglio-franco">0.00</td>
+                </tr>
+                <tr data-erede="Marco">
+                    <td><strong>Marco</strong></td>
+                    <td><input type="text" class="mappali-input" placeholder="Es: ½ 459"></td>
+                    <td class="number" id="valore-marco">0.00</td>
+                    <td class="number" id="quota-marco">655'840.28</td>
+                    <td class="number" id="conguaglio-marco">0.00</td>
+                </tr>
+                <tr data-erede="Giovanna">
+                    <td><strong>Giovanna</strong></td>
+                    <td><input type="text" class="mappali-input" placeholder="Es: ½ 1104,419,425,995"></td>
+                    <td class="number" id="valore-giovanna">0.00</td>
+                    <td class="number" id="quota-giovanna">983'760.42</td>
+                    <td class="number" id="conguaglio-giovanna">0.00</td>
+                </tr>
+                <tr data-erede="Maria">
+                    <td><strong>Maria</strong></td>
+                    <td><input type="text" class="mappali-input" placeholder="Es: ½ 1104,897"></td>
+                    <td class="number" id="valore-maria">0.00</td>
+                    <td class="number" id="quota-maria">983'760.42</td>
+                    <td class="number" id="conguaglio-maria">0.00</td>
+                </tr>
+                <tr data-erede="Mirko">
+                    <td><strong>Mirko</strong></td>
+                    <td><input type="text" class="mappali-input" placeholder="Es: 716,721"></td>
+                    <td class="number" id="valore-mirko">0.00</td>
+                    <td class="number" id="quota-mirko">2'740'034.62</td>
+                    <td class="number" id="conguaglio-mirko">0.00</td>
+                </tr>
+            </tbody>
+            <tfoot class="totals">
+                <tr>
+                    <td colspan="2"><strong>TOTALE</strong></td>
+                    <td class="number" id="totale-assegnato"><strong>0.00</strong></td>
+                    <td class="number" id="totale-quota"><strong>6'675'081.60</strong></td>
+                    <td class="number" id="totale-conguaglio"><strong>0.00</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="button-container">
+            <button id="calcola-btn">🧮 Calcola Conguagli</button>
+            <button id="stampa-btn" class="print-button">🖨️ Stampa Tabella</button>
+        </div>
+    </div>
+
+    <script>
+        // Formatta i numeri con apostrofo
+        function formatNumber(num) {
+            return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace(/\./g, "'").replace(/,/g, '.');
+        }
+
+        // Calcola il valore dei mappali inseriti
+        function calcolaValore(input) {
+            const mappali = input.split(',').map(item => item.trim());
+            let totale = 0;
+
+            mappali.forEach(item => {
+                if (item.includes('/')) {
+                    const [frazione, id] = item.split(' ');
+                    const valoreMappale = parseInt(document.querySelector(`#mappali-data span[data-id="${id}"]`).dataset.value);
+                    const valore = (parseInt(frazione.split('/')[0]) / parseInt(frazione.split('/')[1])) * valoreMappale;
+                    totale += valore;
+                } else {
+                    const valoreMappale = parseInt(document.querySelector(`#mappali-data span[data-id="${item}"]`).dataset.value);
+                    totale += valoreMappale || 0;
+                }
+            });
+
+            return totale;
+        }
+
+        // Genera il contenuto HTML per la stampa
+        function generaContenutoStampa() {
+            const oggi = new Date();
+            const dataFormattata = oggi.toLocaleDateString('it-IT', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            
+            let html = `
+                <!DOCTYPE html>
+                <html lang="it">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Conguagli Ereditari - Stampa</title>
+                    <style>
+                        @page {
+                            size: A4;
+                            margin: 1.5cm;
+                        }
+                        body {
+                            font-family: Arial, sans-serif;
+                            line-height: 1.4;
+                            color: #000;
+                            padding: 20px;
+                        }
+                        .header {
+                            text-align: center;
+                            margin-bottom: 20px;
+                            padding-bottom: 10px;
+                            border-bottom: 2px solid #333;
+                        }
+                        .header h1 {
+                            font-size: 18pt;
+                            margin: 0;
+                        }
+                        .header .date {
+                            font-size: 11pt;
+                            color: #555;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-top: 15px;
+                            font-size: 10pt;
+                        }
+                        th, td {
+                            border: 1px solid #ddd;
+                            padding: 8px 10px;
+                            text-align: left;
+                        }
+                        th {
+                            background-color: #f2f2f2;
+                            font-weight: bold;
+                        }
+                        .number {
+                            text-align: right;
+                            font-variant-numeric: tabular-nums;
+                        }
+                        .positive {
+                            color: #006400;
+                            font-weight: bold;
+                        }
+                        .negative {
+                            color: #8B0000;
+                            font-weight: bold;
+                        }
+                        .totals {
+                            font-weight: bold;
+                            background-color: #e8e8e8;
+                        }
+                        .totals td {
+                            border-top: 2px solid #333;
+                        }
+                        @media print {
+                            body {
+                                padding: 0;
+                            }
+                            .no-print {
+                                display: none !important;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Conguagli Ereditari</h1>
+                        <div class="date">${dataFormattata}</div>
+                    </div>
+            `;
+
+            // Aggiungi la tabella
+            html += document.getElementById('tabella-conguagli').outerHTML;
+
+            // Aggiungi note a piè di pagina se necessario
+            html += `
+                    <div class="footer no-print" style="margin-top: 30px; font-size: 9pt; color: #666; text-align: center;">
+                        Documento generato automaticamente il ${dataFormattata}
+                    </div>
+                </body>
+                </html>
+            `;
+
+            return html;
+        }
+
+        // Aggiorna tutta la tabella
+        function aggiornaTabella() {
+            let totaleAssegnato = 0;
+            let totaleConguaglio = 0;
+
+            document.querySelectorAll('#tabella-conguagli tbody tr').forEach(row => {
+                const erede = row.dataset.erede;
+                const input = row.querySelector('.mappali-input').value;
+                const valoreAssegnato = input ? calcolaValore(input) : 0;
+                const quotaTotale = parseFloat(row.querySelector(`#quota-${erede.toLowerCase()}`).textContent.replace(/'/g, ''));
+                const conguaglio = quotaTotale - valoreAssegnato;
+
+                row.querySelector(`#valore-${erede.toLowerCase()}`).textContent = formatNumber(valoreAssegnato);
+                row.querySelector(`#conguaglio-${erede.toLowerCase()}`).textContent = formatNumber(conguaglio);
+                row.querySelector(`#conguaglio-${erede.toLowerCase()}`).className = `number ${conguaglio >= 0 ? 'positive' : 'negative'}`;
+
+                totaleAssegnato += valoreAssegnato;
+                totaleConguaglio += conguaglio;
+            });
+
+            document.getElementById('totale-assegnato').textContent = formatNumber(totaleAssegnato);
+            document.getElementById('totale-conguaglio').textContent = formatNumber(totaleConguaglio);
+        }
+
+        // Stampa la tabella in una nuova finestra
+        document.getElementById('stampa-btn').addEventListener('click', function() {
+            // Prima aggiorna i calcoli
+            aggiornaTabella();
+            
+            // Genera il contenuto per la stampa
+            const contenutoStampa = generaContenutoStampa();
+            
+            // Apre una nuova finestra con il contenuto ottimizzato per la stampa
+            const finestraStampa = window.open('', '_blank');
+            finestraStampa.document.open();
+            finestraStampa.document.write(contenutoStampa);
+            finestraStampa.document.close();
+            
+            // Opzionale: avvia automaticamente la stampa
+            setTimeout(() => {
+                finestraStampa.print();
+            }, 500);
+        });
+
+        // Calcola automaticamente quando si preme Enter
+        document.querySelectorAll('.mappali-input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') aggiornaTabella();
+            });
+        });
+
+        // Event listener per il pulsante calcola
+        document.getElementById('calcola-btn').addEventListener('click', aggiornaTabella);
+    </script>
+</body>
+</html>
